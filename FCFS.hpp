@@ -1,10 +1,6 @@
-#pragma once
-#include <vector> 
-#include <map>
 #include <list>
-#include <queue>
-#include <iostream>
 #include <bits/stdc++.h>
+
 using namespace std;
 
 bool compareArrival(Process p1, Process p2){
@@ -17,7 +13,6 @@ vector<vector<Process> > FCFS(vector<Process>& processes, int& finishTime, float
     list<Process> readyQ; 
     Process* running = nullptr;
     int cycle = 0; 
-    
     float busyCyclesNum = 0;
 
     //run process with smallest arrival time 
@@ -25,11 +20,11 @@ vector<vector<Process> > FCFS(vector<Process>& processes, int& finishTime, float
     // running = &processes.front();
     //loop as long as there's still processes running or in Q 
     while(running || !readyQ.empty() || !blockedQ.empty() || processes[0].arrival >= cycle){
-
-        //check if current process is finished 
         vector<Process> tempState;
         bool busyCycle = false;
-        if(running && !running->IO && !running->CPU){ 
+        
+        //check if current process is finished 
+        if(running && !running->IO && !running->CPU){
             running->setFinishCycle(cycle - 1);
             pStats[running->id] = running->finishCycle - running->arrival + 1;
             running->status = "Terminated"; 
@@ -42,15 +37,14 @@ vector<vector<Process> > FCFS(vector<Process>& processes, int& finishTime, float
             running = NULL;
             
         }
-
-        // check if a new process is ready 
+        //check for newly arrived processes
         for(auto i=processes.begin(); i!=processes.end(); i++){ 
             if(i->arrival == cycle) {
                 readyQ.push_back(*i);
                 i->status = "ready";
             }
         }
-        
+        //handle blocked
         if(!blockedQ.empty()){  
             auto i = blockedQ.begin();
             while(i != blockedQ.end()){
@@ -66,6 +60,7 @@ vector<vector<Process> > FCFS(vector<Process>& processes, int& finishTime, float
                 }
             }
         }
+ 
         //if nothing is running, run next in ready Q and remove it from Q
         if(!running && !readyQ.empty()){
             readyQ.sort();
@@ -79,6 +74,7 @@ vector<vector<Process> > FCFS(vector<Process>& processes, int& finishTime, float
             running->CPU--; 
         }
 
+        //keep track of current state
         if(running) {
             tempState.push_back(*running); 
             busyCycle = true;
@@ -91,7 +87,10 @@ vector<vector<Process> > FCFS(vector<Process>& processes, int& finishTime, float
             tempState.push_back(*i); 
             if (i->status == "running") busyCycle = true;
         }
+
+        //update state
         state.push_back(tempState);
+
         busyCyclesNum = busyCycle? busyCyclesNum+1 : busyCyclesNum;
         cycle++;
     }

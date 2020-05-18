@@ -1,8 +1,6 @@
 #include "process.hpp"
 #include <fstream> 
-#include <vector>
 #include <sstream>
-#include <iostream>
 #include <string>
 
 using namespace std; 

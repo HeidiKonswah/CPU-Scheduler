@@ -1,6 +1,4 @@
-#include <fstream> 
-#include <vector>
-#include <map>
+
 using namespace std; 
 
 void writeOutput(vector<vector<Process> > stats, int finish, float utl, map<int, int> pStats){
