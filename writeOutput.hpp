@@ -5,6 +5,7 @@ using namespace std;
 
 void writeOutput(vector<vector<Process> > stats, int finish, float utl, map<int, int> pStats){
     ofstream outputFile; 
+    cout << "writing" << endl;
     outputFile.open("output.txt"); 
     outputFile << "====Scheduling simulation====" << endl; 
     int count = 0;
@@ -26,4 +27,5 @@ void writeOutput(vector<vector<Process> > stats, int finish, float utl, map<int,
         outputFile << "Turnaround of P#" << i->first << " = " << i->second << endl;
     }
     outputFile.close();
+    cout << "written" << endl;
 }

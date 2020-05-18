@@ -7,16 +7,16 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-bool compareArrival(Process p1, Process p2){
-    return p1.arrival<p2.arrival; 
-}
 
-vector<vector<Process> > FCFS(vector<Process>& processes, int& finishTime, float& cpuUtl, map<int, int>& pStats){
+list<Process> RRlist;
+
+vector<vector<Process> > FCFS(vector<Process>& processes, int& finishTime, float& cpuUtl, map<int, int>& pStats, list<Process>  RRQ = RRlist){
     vector<vector<Process> > state;
     list<Process> blockedQ; 
     list<Process> readyQ; 
     Process* running = nullptr;
     int cycle = 0; 
+    cout << "inside FCFS" << endl;
     
     float busyCyclesNum = 0;
 
@@ -25,47 +25,46 @@ vector<vector<Process> > FCFS(vector<Process>& processes, int& finishTime, float
     // running = &processes.front();
     //loop as long as there's still processes running or in Q 
     while(running || !readyQ.empty() || !blockedQ.empty() || processes[0].arrival >= cycle){
-
-        //check if current process is finished 
         vector<Process> tempState;
         bool busyCycle = false;
+
+        //check if current process is finished 
         if(running && !running->IO && !running->CPU){ 
-            running->setFinishCycle(cycle - 1);
             pStats[running->id] = running->finishCycle - running->arrival + 1;
-            running->status = "Terminated"; 
-            running = NULL;
-           
+            terminate(running, cycle);
         } // check if current process needs IO 
         else if(running && !running->CPU &&running->IO){             
             blockedQ.push_back(*running);
             running->status = "blocked";
             running = NULL;
-            
         }
 
-        // check if a new process is ready 
+        // checkNewArrivals(processes,readyQ, cycle);
+        // cout << "arrivals" << endl;
+        // handleBlocked(blockedQ, readyQ);
+        // cout << "blocked" << endl;
         for(auto i=processes.begin(); i!=processes.end(); i++){ 
-            if(i->arrival == cycle) {
-                readyQ.push_back(*i);
-                i->status = "ready";
-            }
+        if(i->arrival == cycle) {
+            readyQ.push_back(*i);
+            i->status = "ready";
         }
-        
+        }
         if(!blockedQ.empty()){  
-            auto i = blockedQ.begin();
-            while(i != blockedQ.end()){
-                //decrease IO of blocked process by 1
-                //when it's 0, remove from blocked and add to ready
-                if(i->IO == 0){     
-                    i->status = "ready";
-                    readyQ.push_back(*i);
-                    blockedQ.erase(i++); 
-                }else{
-                    i->IO--; 
-                    i++;
-                }
+        auto i = blockedQ.begin();
+        while(i != blockedQ.end()){
+            //decrease IO of blocked process by 1
+            //when it's 0, remove from blocked and add to ready
+            if(i->IO == 0){     
+                i->status = "ready";
+                readyQ.push_back(*i);
+                blockedQ.erase(i++); 
+            }else{
+                i->IO--; 
+                i++;
             }
         }
+     }
+
         //if nothing is running, run next in ready Q and remove it from Q
         if(!running && !readyQ.empty()){
             readyQ.sort();

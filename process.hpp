@@ -3,6 +3,7 @@
 class Process {
     public: 
         int id, CPU, IO, arrival; 
+        int quantumCycles = 0; 
         int finishCycle;
         std::string status = "waiting";
         Process(int id, int CPU, int IO, int arrival): id(id), CPU(CPU), IO(IO), arrival(arrival){ }

@@ -1,4 +1,3 @@
-#include "process.hpp"
 #include <fstream> 
 #include <vector>
 #include <sstream>
@@ -8,6 +7,7 @@
 using namespace std; 
 
 vector<Process> readProcesses(){
+    cout << "reading" << endl;
     vector<Process> processes;
     vector<vector<string> > allLines; 
     string currentLine;
@@ -33,5 +33,6 @@ vector<Process> readProcesses(){
         Process temp(stoi(p[0]), stoi(p[1]), stoi(p[2]), stoi(p[3]));
         processes.push_back(temp); 
     };
+    cout << "read" << endl;
     return processes;
 }
