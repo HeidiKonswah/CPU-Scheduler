@@ -2,7 +2,7 @@
 An implementation of both FCFS and round robin algorithms for scheduling OS processes 
 _Part of CS-333 Course_
 
------
+
 
 ## **To run project:**
 open terminal
